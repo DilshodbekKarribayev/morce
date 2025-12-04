@@ -43,28 +43,43 @@
         .wrong{animation:shake 0.6s;background:#600;}
         @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-30px)}75%{transform:translateX(30px)}}
 
-        #info{
-            position:absolute;top:10px;left:10px;font-size:clamp(16px, 4vw, 26px);
-            background:#111;padding:10px 15px;border:2px solid #0f0;border-radius:10px;color:#0a0;
+        /* YANGI – IKKI BLOK UCHUN BIR XIL DIZAYN */
+        .panel {
+            position: absolute;
+            top: 12px;
+            background: #111;
+            border: 3px solid #0f0;
+            border-radius: 15px;
+            padding: 12px 20px;
+            font-size: clamp(16px, 4vw, 28px);
+            font-weight: bold;
+            color: #0f0;
+            box-shadow: 0 0 30px #0f0;
+            line-height: 1.5;
+            z-index: 10;
         }
-        #stats{
-            position:absolute;top:10px;right:10px;
-            background:#111;border:3px solid #0f0;border-radius:15px;
-            padding:10px 20px;font-size:clamp(20px, 5vw, 32px);font-weight:bold;
-            text-align:center;line-height:1.5;box-shadow:0 0 30px #0f0;
+        #info {
+            left: 12px;
+            text-align: left;
         }
-        .correct{color:#0f0;}
-        .error{color:#f66;}
+        #stats {
+            right: 12px;
+            text-align: center;
+        }
+
+        .correct { color: #0f0; }
+        .error   { color: #f66; }
     </style>
 </head>
 <body>
 
-    <div id="info">
+    <!-- YANGI BIR XIL KO‘RINISHDA INFO VA STATS -->
+    <div id="info" class="panel">
         Qisqa → .<br>
-        0.5s → —
+        ≥0.5s → —
     </div>
 
-    <div id="stats">
+    <div id="stats" class="panel">
         <div>To'g'ri: <span id="correctCount" class="correct">0</span></div>
         <div>Xato: <span id="errorCount" class="error">0</span></div>
     </div>
@@ -185,9 +200,11 @@
         buttonEl.addEventListener("touchstart",e=>{e.preventDefault();buttonEl.dispatchEvent(new Event("mousedown"));});
         buttonEl.addEventListener("touchend",e=>{e.preventDefault();buttonEl.dispatchEvent(new Event("mouseup"));});
 
+        // Birinchi marta ovoz ruxsati olish uchun
+        document.body.addEventListener("click",()=>audioCtx.resume(),{once:true});
+
         newWord();
         updateStats();
-        document.body.addEventListener("click",()=>audioCtx.resume(),{once:true});
     </script>
 </body>
 </html>
