@@ -3,73 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morse Trainer – Mukammal yakuniy versiya</title>
+    <title>Morse Trainer – Nafis & Kichraytirilgan</title>
     <style>
         *{box-sizing:border-box;}
         body{
-            margin:0;height:100vh;background:#000;color:#0f0;
-            font-family:'Courier New',monospace;
-            display:flex;flex-direction:column;overflow:hidden;
-        }
-
-        /* Yuqori panel – info + statistika */
+            {margin:0;height:100vh;background:#000;color:#0f0;font-family:'Courier New',monospace;display:flex;flex-direction:column;overflow:hidden;}
+        
         .top-bar{
-            width:100%;padding:12px 15px;
-            display:flex;justify-content:space-between;align-items:center;
-            flex-shrink:0;
+            padding:10px 12px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;
         }
         #info{
-            font-size:clamp(16px,4.5vw,28px);
-            background:#111;padding:10px 18px;
-            border:2px solid #0f0;border-radius:12px;color:#0a0;
+            font-size:clamp(14px,3.8vw,24px);background:#111;padding:8px 14px;
+            border:2px solid #0f0;border-radius:10px;color:#0a0;
         }
         #stats{
-            background:#111;border:3px solid #0f0;border-radius:16px;
-            padding:12px 30px;font-size:clamp(22px,6vw,36px);font-weight:bold;
-            min-width:280px;text-align:center;
-            box-shadow:0 0 35px #0f0;
+            background:#111;border:2.5px solid #0f0;border-radius:14px;
+            padding:10px 22px;font-size:clamp(19px,5.2vw,32px);font-weight:bold;
+            min-width:240px;text-align:center;box-shadow:0 0 25px #0f0;
         }
-        #stats span{margin:0 20px;}
+        #stats span{margin:0 14px;}
 
-        /* Asosiy qism */
         .main{
-            flex:1;display:flex;flex-direction:column;
-            justify-content:center;align-items:center;
-            padding:20px 10px;
+            flex:1;display:flex;flex-direction:column;justify-content:center;
+            align-items:center;padding:10px;
         }
         #targetWord{
-            font-size:clamp(70px,14vw,140px);
-            letter-spacing:0.1em;margin-bottom:40px;
-            text-shadow:0 0 50px #0f0;font-weight:bold;
+            font-size:clamp(56px,11vw,120px);letter-spacing:0.09em;
+            margin-bottom:30px;text-shadow:0 0 40px #0f0;font-weight:bold;
         }
         #currentLetter{
-            font-size:clamp(42px,10vw,110px);
-            margin:20px 0;min-height:120px;color:#0ff;
+            font-size:clamp(36px,8.5vw,95px);margin:15px 0;
+            min-height:100px;color:#0ff;
         }
         #guessLine{
-            font-size:clamp(60px,12vw,130px);
-            letter-spacing:0.12em;margin:40px 0;
-            min-height:150px;font-weight:bold;
+            font-size:clamp(52px,10.5vw,115px);letter-spacing:0.1em;
+            margin:30px 0;min-height:130px;font-weight:bold;
         }
         #morseButton{
-            width:clamp(250px,78vw,420px);
-            height:clamp(250px,78vw,420px);
+            width:clamp(210px,68vw,360px);height:clamp(210px,68vw,360px);
             border-radius:50%;background:#111;
-            border:clamp(15px,5vw,25px) solid #0f0;
-            box-shadow:0 0 100px #0f0;cursor:pointer;
-            user-select:none;font-size:clamp(36px,10vw,60px);font-weight:bold;
+            border:clamp(12px,4vw,20px) solid #0f0;
+            box-shadow:0 0 70px #0f0;cursor:pointer;
+            user-select:none;font-size:clamp(28px,8vw,48px);font-weight:bold;
             display:flex;align-items:center;justify-content:center;
             transition:0.1s;color:#0f0;
         }
         #morseButton.pressed{
             background:#0f0;color:#000;
-            box-shadow:0 0 250px #0f0;transform:scale(0.92);
+            box-shadow:0 0 180px #0f0;transform:scale(0.92);
         }
         .wrong{animation:shake 0.6s;background:#600;}
         @keyframes shake{
             0%,100%{transform:translateX(0)}
-            25%{transform:translateX(-40px)}
-            75%{transform:translateX(40px)}
+            25%{translateX(-30px)}
+            75%{translateX(30px)}
         }
     </style>
 </head>
@@ -129,7 +116,7 @@
             if(words.length===0){
                 targetEl.textContent="TUGADI!";
                 currentLetterEl.textContent=`Jami to'g'ri: ${correctWords}`;
-                guessEl.textContent="Zo'r ish!";
+                guessEl.textContent="Ajoyib!";
                 buttonEl.style.display="none";
                 return;
             }
@@ -146,7 +133,7 @@
             currentLetterEl.style.color="#0ff";
 
             let line="";
-            for(let i=0;i<currentWord.length;i++) line += (guessed[i]||"_") + " ";
+            for(let i=0;i<currentWord.length;i++) line += (guessed[i]||" _ ") + " ";
             guessEl.textContent=line.trim();
         }
 
