@@ -3,72 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morse Trainer – Mukammal versiya</title>
+    <title>Morse Trainer – Mukammal yakuniy versiya</title>
     <style>
         *{box-sizing:border-box;}
         body{
             margin:0;height:100vh;background:#000;color:#0f0;
             font-family:'Courier New',monospace;
-            display:flex;flex-direction:column;overflow:hidden;padding:10px;
+            display:flex;flex-direction:column;overflow:hidden;
         }
-        .header{
+
+        /* Yuqori panel – info + statistika */
+        .top-bar{
+            width:100%;padding:12px 15px;
             display:flex;justify-content:space-between;align-items:center;
-            width:100%;max-width:900px;padding:10px 0;
+            flex-shrink:0;
         }
         #info{
-            font-size:clamp(16px,4vw,26px);background:#111;padding:10px 20px;
+            font-size:clamp(16px,4.5vw,28px);
+            background:#111;padding:10px 18px;
             border:2px solid #0f0;border-radius:12px;color:#0a0;
         }
         #stats{
-            background:#111;border:3px solid #0f0;border-radius:15px;
-            padding:12px 25px;font-size:clamp(20px,5vw,32px);font-weight:bold;
-            text-align:center;min-width:220px;box-shadow:0 0 30px #0f0;
+            background:#111;border:3px solid #0f0;border-radius:16px;
+            padding:12px 30px;font-size:clamp(22px,6vw,36px);font-weight:bold;
+            min-width:280px;text-align:center;
+            box-shadow:0 0 35px #0f0;
         }
-        #stats span{margin:0 15px;}
-        .correct{color:#0f0;}
-        .error{color:#f66;}
+        #stats span{margin:0 20px;}
 
+        /* Asosiy qism */
         .main{
             flex:1;display:flex;flex-direction:column;
-            justify-content:center;align-items:center;width:100%;max-width:900px;
+            justify-content:center;align-items:center;
+            padding:20px 10px;
         }
         #targetWord{
-            font-size:clamp(60px,12vw,130px);letter-spacing:0.1em;
-            margin-bottom:30px;text-shadow:0 0 40px #0f0;font-weight:bold;
+            font-size:clamp(70px,14vw,140px);
+            letter-spacing:0.1em;margin-bottom:40px;
+            text-shadow:0 0 50px #0f0;font-weight:bold;
         }
         #currentLetter{
-            font-size:clamp(40px,9vw,100px);margin:20px 0;min-height:110px;color:#0ff;
+            font-size:clamp(42px,10vw,110px);
+            margin:20px 0;min-height:120px;color:#0ff;
         }
         #guessLine{
-            font-size:clamp(55px,11vw,120px);letter-spacing:0.12em;
-            margin:30px 0;min-height:140px;font-weight:bold;
+            font-size:clamp(60px,12vw,130px);
+            letter-spacing:0.12em;margin:40px 0;
+            min-height:150px;font-weight:bold;
         }
         #morseButton{
-            width:clamp(240px,75vw,400px);height:clamp(240px,75vw,400px);
+            width:clamp(250px,78vw,420px);
+            height:clamp(250px,78vw,420px);
             border-radius:50%;background:#111;
-            border:clamp(14px,4.5vw,22px) solid #0f0;
-            box-shadow:0 0 90px #0f0;cursor:pointer;
-            user-select:none;font-size:clamp(32px,9vw,56px);font-weight:bold;
+            border:clamp(15px,5vw,25px) solid #0f0;
+            box-shadow:0 0 100px #0f0;cursor:pointer;
+            user-select:none;font-size:clamp(36px,10vw,60px);font-weight:bold;
             display:flex;align-items:center;justify-content:center;
             transition:0.1s;color:#0f0;
         }
         #morseButton.pressed{
-            background:#0f0;color:#000;box-shadow:0 0 220px #0f0;transform:scale(0.92);
+            background:#0f0;color:#000;
+            box-shadow:0 0 250px #0f0;transform:scale(0.92);
         }
         .wrong{animation:shake 0.6s;background:#600;}
-        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-35px)}75%{transform:translateX(35px)}}
+        @keyframes shake{
+            0%,100%{transform:translateX(0)}
+            25%{transform:translateX(-40px)}
+            75%{transform:translateX(40px)}
+        }
     </style>
 </head>
 <body>
 
-    <div class="header">
+    <div class="top-bar">
         <div id="info">
-            Qisqa → .<br>
-            0.5s → —
+            Qisqa → .<br>0.5s → —
         </div>
         <div id="stats">
-            To'g'ri: <span id="correctCount" class="correct">0</span> | 
-            Xato: <span id="errorCount" class="error">0</span>
+            To'g'ri: <span id="correctCount">0</span> | Xato: <span id="errorCount">0</span>
         </div>
     </div>
 
@@ -80,7 +92,7 @@
     </div>
 
     <script>
-        const words = ["HELLO","WORLD","MORSE","CODE","RADIO","LIGHT","STAR","LOVE","PEACE","YES","NO","SOS","YOU","FRIEND","HOME","FIRE","WATER","BOOK","SKY","MOON","TEST","GOOD","NIGHT","WAVE","OCEAN","SIGNAL","BEACON","TREE","SUN","PARIS","LONDON","TOKYO","MOSCOW"];
+        const words = ["HELLO","WORLD","MORSE","CODE","RADIO","LIGHT","STAR","LOVE","PEACE","YES","NO","SOS","YOU","FRIEND","HOME","FIRE","WATER","BOOK","SKY","MOON","TEST","GOOD","NIGHT","WAVE","OCEAN","SIGNAL","BEACON","TREE","SUN","PARIS","LONDON","TOKYO"];
 
         const letterToMorse = {
             'A':'.-', 'B':'-...', 'C':'-.-.', 'D':'-..', 'E':'.', 'F':'..-.', 'G':'--.', 'H':'....',
@@ -108,13 +120,16 @@
             o.start(); o.stop(audioCtx.currentTime + dur/1000);
         }
 
-        function updateStats(){ correctEl.textContent=correctWords; errorEl.textContent=errorAttempts; }
+        function updateStats(){
+            correctEl.textContent = correctWords;
+            errorEl.textContent = errorAttempts;
+        }
 
         function newWord(){
             if(words.length===0){
                 targetEl.textContent="TUGADI!";
                 currentLetterEl.textContent=`Jami to'g'ri: ${correctWords}`;
-                guessEl.textContent="Ajoyib ishlagansiz!";
+                guessEl.textContent="Zo'r ish!";
                 buttonEl.style.display="none";
                 return;
             }
