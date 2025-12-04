@@ -3,73 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morse Trainer – Har qanday ekranda mukammal</title>
+    <title>Morse Trainer – Mukammal versiya</title>
     <style>
         *{box-sizing:border-box;}
         body{
             margin:0;height:100vh;background:#000;color:#0f0;
             font-family:'Courier New',monospace;
-            display:flex;flex-direction:column;justify-content:center;align-items:center;
-            overflow:hidden;padding:10px;
+            display:flex;flex-direction:column;overflow:hidden;padding:10px;
         }
-        .container{
-            width:100%;max-width:900px;display:flex;flex-direction:column;
-            align-items:center;justify-content:center;flex:1;
+        .header{
+            display:flex;justify-content:space-between;align-items:center;
+            width:100%;max-width:900px;padding:10px 0;
         }
-        #targetWord{
-            font-size: clamp(60px, 12vw, 130px);letter-spacing:0.08em;margin:10px 0;
-            text-shadow:0 0 30px #0f0;font-weight:bold;
-        }
-        #currentLetter{
-            font-size: clamp(36px, 8vw, 90px);margin:15px 0;min-height:100px;color:#0ff;
-        }
-        #guessLine{
-            font-size: clamp(50px, 10vw, 110px);letter-spacing:0.1em;margin:20px 0;
-            min-height:130px;
-        }
-        #morseButton{
-            width:clamp(220px, 70vw, 380px);
-            height:clamp(220px, 70vw, 380px);
-            border-radius:50%;background:#111;
-            border:clamp(12px, 4vw, 20px) solid #0f0;
-            box-shadow:0 0 80px #0f0;cursor:pointer;
-            user-select:none;font-size:clamp(28px, 8vw, 50px);font-weight:bold;
-            display:flex;align-items:center;justify-content:center;
-            transition:all 0.1s;color:#0f0;
-        }
-        #morseButton.pressed{
-            background:#0f0;color:#000;box-shadow:0 0 200px #0f0;transform:scale(0.92);
-        }
-        .wrong{animation:shake 0.6s;background:#600;}
-        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-30px)}75%{transform:translateX(30px)}}
-
         #info{
-            position:absolute;top:10px;left:10px;font-size:clamp(16px, 4vw, 26px);
-            background:#111;padding:10px 15px;border:2px solid #0f0;border-radius:10px;color:#0a0;
+            font-size:clamp(16px,4vw,26px);background:#111;padding:10px 20px;
+            border:2px solid #0f0;border-radius:12px;color:#0a0;
         }
         #stats{
-            position:absolute;top:10px;right:10px;
             background:#111;border:3px solid #0f0;border-radius:15px;
-            padding:10px 20px;font-size:clamp(20px, 5vw, 32px);font-weight:bold;
-            text-align:center;line-height:1.5;box-shadow:0 0 30px #0f0;
+            padding:12px 25px;font-size:clamp(20px,5vw,32px);font-weight:bold;
+            text-align:center;min-width:220px;box-shadow:0 0 30px #0f0;
         }
+        #stats span{margin:0 15px;}
         .correct{color:#0f0;}
         .error{color:#f66;}
+
+        .main{
+            flex:1;display:flex;flex-direction:column;
+            justify-content:center;align-items:center;width:100%;max-width:900px;
+        }
+        #targetWord{
+            font-size:clamp(60px,12vw,130px);letter-spacing:0.1em;
+            margin-bottom:30px;text-shadow:0 0 40px #0f0;font-weight:bold;
+        }
+        #currentLetter{
+            font-size:clamp(40px,9vw,100px);margin:20px 0;min-height:110px;color:#0ff;
+        }
+        #guessLine{
+            font-size:clamp(55px,11vw,120px);letter-spacing:0.12em;
+            margin:30px 0;min-height:140px;font-weight:bold;
+        }
+        #morseButton{
+            width:clamp(240px,75vw,400px);height:clamp(240px,75vw,400px);
+            border-radius:50%;background:#111;
+            border:clamp(14px,4.5vw,22px) solid #0f0;
+            box-shadow:0 0 90px #0f0;cursor:pointer;
+            user-select:none;font-size:clamp(32px,9vw,56px);font-weight:bold;
+            display:flex;align-items:center;justify-content:center;
+            transition:0.1s;color:#0f0;
+        }
+        #morseButton.pressed{
+            background:#0f0;color:#000;box-shadow:0 0 220px #0f0;transform:scale(0.92);
+        }
+        .wrong{animation:shake 0.6s;background:#600;}
+        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-35px)}75%{transform:translateX(35px)}}
     </style>
 </head>
 <body>
 
-    <div id="info">
-        Qisqa → .<br>
-        0.5s → —
+    <div class="header">
+        <div id="info">
+            Qisqa → .<br>
+            0.5s → —
+        </div>
+        <div id="stats">
+            To'g'ri: <span id="correctCount" class="correct">0</span> | 
+            Xato: <span id="errorCount" class="error">0</span>
+        </div>
     </div>
 
-    <div id="stats">
-        <div>To'g'ri: <span id="correctCount" class="correct">0</span></div>
-        <div>Xato: <span id="errorCount" class="error">0</span></div>
-    </div>
-
-    <div class="container">
+    <div class="main">
         <div id="targetWord">HELLO</div>
         <div id="currentLetter">H → ....</div>
         <div id="guessLine">_ _ _ _ _</div>
@@ -77,7 +80,7 @@
     </div>
 
     <script>
-        const words = ["HELLO","WORLD","MORSE","CODE","RADIO","LIGHT","STAR","LOVE","PEACE","YES","NO","SOS","YOU","FRIEND","HOME","FIRE","WATER","BOOK","SKY","MOON","TEST","GOOD","NIGHT","WAVE","OCEAN","SIGNAL","BEACON","TREE","SUN","SIGNAL","BEACON"];
+        const words = ["HELLO","WORLD","MORSE","CODE","RADIO","LIGHT","STAR","LOVE","PEACE","YES","NO","SOS","YOU","FRIEND","HOME","FIRE","WATER","BOOK","SKY","MOON","TEST","GOOD","NIGHT","WAVE","OCEAN","SIGNAL","BEACON","TREE","SUN","PARIS","LONDON","TOKYO","MOSCOW"];
 
         const letterToMorse = {
             'A':'.-', 'B':'-...', 'C':'-.-.', 'D':'-..', 'E':'.', 'F':'..-.', 'G':'--.', 'H':'....',
@@ -111,7 +114,7 @@
             if(words.length===0){
                 targetEl.textContent="TUGADI!";
                 currentLetterEl.textContent=`Jami to'g'ri: ${correctWords}`;
-                guessEl.textContent="Ajoyib!";
+                guessEl.textContent="Ajoyib ishlagansiz!";
                 buttonEl.style.display="none";
                 return;
             }
