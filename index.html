@@ -3,45 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morse Trainer + Statistikalar</title>
+    <title>Morse Trainer – Har qanday ekranda mukammal</title>
     <style>
+        *{box-sizing:border-box;}
         body{
             margin:0;height:100vh;background:#000;color:#0f0;
             font-family:'Courier New',monospace;
-            display:flex;flex-direction:column;justify-content:center;
-            align-items:center;overflow:hidden;
+            display:flex;flex-direction:column;justify-content:center;align-items:center;
+            overflow:hidden;padding:10px;
         }
-        #targetWord{font-size:110px;letter-spacing:18px;margin-bottom:10px;text-shadow:0 0 30px #0f0;}
-        #currentLetter{font-size:80px;margin-bottom:30px;min-height:100px;color:#0ff;}
-        #guessLine{font-size:100px;letter-spacing:25px;margin-bottom:70px;min-height:130px;}
+        .container{
+            width:100%;max-width:900px;display:flex;flex-direction:column;
+            align-items:center;justify-content:center;flex:1;
+        }
+        #targetWord{
+            font-size: clamp(60px, 12vw, 130px);letter-spacing:0.08em;margin:10px 0;
+            text-shadow:0 0 30px #0f0;font-weight:bold;
+        }
+        #currentLetter{
+            font-size: clamp(36px, 8vw, 90px);margin:15px 0;min-height:100px;color:#0ff;
+        }
+        #guessLine{
+            font-size: clamp(50px, 10vw, 110px);letter-spacing:0.1em;margin:20px 0;
+            min-height:130px;
+        }
         #morseButton{
-            width:360px;height:360px;border-radius:50%;background:#111;
-            border:18px solid #0f0;box-shadow:0 0 70px #0f0;cursor:pointer;
-            user-select:none;font-size:40px;font-weight:bold;
+            width:clamp(220px, 70vw, 380px);
+            height:clamp(220px, 70vw, 380px);
+            border-radius:50%;background:#111;
+            border:clamp(12px, 4vw, 20px) solid #0f0;
+            box-shadow:0 0 80px #0f0;cursor:pointer;
+            user-select:none;font-size:clamp(28px, 8vw, 50px);font-weight:bold;
             display:flex;align-items:center;justify-content:center;
+            transition:all 0.1s;color:#0f0;
         }
-        #morseButton.pressed{background:#0f0;color:#000;box-shadow:0 0 200px #0f0;transform:scale(0.92);}
+        #morseButton.pressed{
+            background:#0f0;color:#000;box-shadow:0 0 200px #0f0;transform:scale(0.92);
+        }
         .wrong{animation:shake 0.6s;background:#600;}
         @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-30px)}75%{transform:translateX(30px)}}
-        #info{position:absolute;top:20px;left:20px;font-size:24px;color:#0a0;background:#111;padding:10px 20px;border:2px solid #0f0;border-radius:10px;}
-        
-        /* Statistika paneli */
+
+        #info{
+            position:absolute;top:10px;left:10px;font-size:clamp(16px, 4vw, 26px);
+            background:#111;padding:10px 15px;border:2px solid #0f0;border-radius:10px;color:#0a0;
+        }
         #stats{
-            position:absolute;top:20px;right:20px;
+            position:absolute;top:10px;right:10px;
             background:#111;border:3px solid #0f0;border-radius:15px;
-            padding:15px 25px;font-size:28px;font-weight:bold;
-            text-align:center;line-height:1.4;
-            box-shadow:0 0 30px #0f0;
+            padding:10px 20px;font-size:clamp(20px, 5vw, 32px);font-weight:bold;
+            text-align:center;line-height:1.5;box-shadow:0 0 30px #0f0;
         }
         .correct{color:#0f0;}
-        .error{color:#f33;}
+        .error{color:#f66;}
     </style>
 </head>
 <body>
 
     <div id="info">
-        Qisqa bosish → .<br>
-        0.5 sek bosib turish → —
+        Qisqa → .<br>
+        0.5s → —
     </div>
 
     <div id="stats">
@@ -49,51 +69,25 @@
         <div>Xato: <span id="errorCount" class="error">0</span></div>
     </div>
 
-    <div id="targetWord">HELLO</div>
-    <div id="currentLetter">H → ....</div>
-    <div id="guessLine">_ _ _ _ _</div>
-    <div id="morseButton">BOSING</div>
+    <div class="container">
+        <div id="targetWord">HELLO</div>
+        <div id="currentLetter">H → ....</div>
+        <div id="guessLine">_ _ _ _ _</div>
+        <div id="morseButton">BOSING</div>
+    </div>
 
     <script>
-        const words = ["HELLO","WORLD","MORSE","CODE","RADIO","LIGHT","STAR","LOVE","PEACE","YES","NO","SOS","YOU","FRIEND","HOME","FIRE","WATER","BOOK","SKY","MOON","TEST","GOOD","NIGHT","WAVE","OCEAN","SIGNAL","BEACON","TREE","SUN"];
+        const words = ["HELLO","WORLD","MORSE","CODE","RADIO","LIGHT","STAR","LOVE","PEACE","YES","NO","SOS","YOU","FRIEND","HOME","FIRE","WATER","BOOK","SKY","MOON","TEST","GOOD","NIGHT","WAVE","OCEAN","SIGNAL","BEACON","TREE","SUN","SIGNAL","BEACON"];
 
-    const morseToLetter = {
-        '.-':'A',
-        '-...':'B',
-        '-.-.':'C',
-        '-..':'D',
-        '.':'E',
-        '..-.':'F',
-        '--.':'G',
-        '....':'H',
-        '..':'I',
-        '.---':'J',
-        '-.-':'K',
-        '.-..':'L',
-        '--':'M',
-        '-.':'N',
-        '---':'O',
-        '.--.':'P',
-        '--.-':'Q',
-        '.-.':'R',
-        '...':'S',
-        '-':'T',
-        '..-':'U',
-        '...-':'V',
-        '.--':'W',
-        '-..-':'X',
-        '-.--':'Y',
-        '--..':'Z'
-    };
+        const letterToMorse = {
+            'A':'.-', 'B':'-...', 'C':'-.-.', 'D':'-..', 'E':'.', 'F':'..-.', 'G':'--.', 'H':'....',
+            'I':'..', 'J':'.---', 'K':'-.-', 'L':'.-..', 'M':'--', 'N':'-.', 'O':'---', 'P':'.--.',
+            'Q':'--.-', 'R':'.-.', 'S':'...', 'T':'-', 'U':'..-', 'V':'...-', 'W':'.--', 'X':'-..-',
+            'Y':'-.--', 'Z':'--..'
+        };
 
-        let currentWord = "";
-        let currentIndex = 0;
-        let currentInput = "";
-        let guessed = [];
-
-        // Statistikalar
-        let correctWords = 0;
-        let errorAttempts = 0;
+        let currentWord = "", currentIndex = 0, currentInput = "", guessed = [];
+        let correctWords = 0, errorAttempts = 0;
 
         const targetEl = document.getElementById("targetWord");
         const currentLetterEl = document.getElementById("currentLetter");
@@ -105,116 +99,95 @@
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playTone(dur, freq = 800){
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
+            const o=audioCtx.createOscillator(), g=audioCtx.createGain();
             o.connect(g); g.connect(audioCtx.destination);
-            o.frequency.value = freq; o.type = "sine"; g.gain.value = 0.5;
+            o.frequency.value=freq; o.type="sine"; g.gain.value=0.5;
             o.start(); o.stop(audioCtx.currentTime + dur/1000);
         }
 
-        function updateStats(){
-            correctEl.textContent = correctWords;
-            errorEl.textContent = errorAttempts;
-        }
+        function updateStats(){ correctEl.textContent=correctWords; errorEl.textContent=errorAttempts; }
 
         function newWord(){
-            if(words.length === 0){
-                targetEl.textContent = "TUGADI!";
-                currentLetterEl.textContent = `Jami to'g'ri: ${correctWords}`;
-                guessEl.textContent = "Ajoyib ish!";
-                buttonEl.style.display = "none";
+            if(words.length===0){
+                targetEl.textContent="TUGADI!";
+                currentLetterEl.textContent=`Jami to'g'ri: ${correctWords}`;
+                guessEl.textContent="Ajoyib!";
+                buttonEl.style.display="none";
                 return;
             }
-            const i = Math.floor(Math.random() * words.length);
-            currentWord = words.splice(i, 1)[0];
-            currentIndex = 0;
-            guessed = [];
-            currentInput = "";
-            targetEl.textContent = currentWord;
+            const i=Math.floor(Math.random()*words.length);
+            currentWord=words.splice(i,1)[0];
+            currentIndex=0; guessed=[]; currentInput="";
+            targetEl.textContent=currentWord;
             updateDisplay();
         }
 
         function updateDisplay(){
-            const currentTargetLetter = currentWord[currentIndex];
-            const expectedCode = letterToMorse[currentTargetLetter];
-            currentLetterEl.textContent = `${currentTargetLetter} → ${expectedCode}`;
-            currentLetterEl.style.color = "#0ff";
+            const l=currentWord[currentIndex];
+            currentLetterEl.textContent = `${l} → ${letterToMorse[l]}`;
+            currentLetterEl.style.color="#0ff";
 
-            let line = "";
-            for(let i = 0; i < currentWord.length; i++){
-                line += (guessed[i] || "_") + " ";
-            }
-            guessEl.textContent = line.trim();
+            let line="";
+            for(let i=0;i<currentWord.length;i++) line += (guessed[i]||"_") + " ";
+            guessEl.textContent=line.trim();
         }
 
         function wrong(){
             errorAttempts++;
             updateStats();
             document.body.classList.add("wrong");
-            playTone(500, 300);
-            currentLetterEl.style.color = "#f00";
+            playTone(500,300);
+            currentLetterEl.style.color="#f00";
             currentLetterEl.textContent += "  XATO!";
             setTimeout(()=>{
                 document.body.classList.remove("wrong");
-                currentInput = "";
+                currentInput="";
                 updateDisplay();
-            }, 1000);
+            },1000);
         }
 
         function correct(){
             guessed.push(currentWord[currentIndex]);
-            playTone(200, 1200);
+            playTone(200,1200);
             currentIndex++;
-            currentInput = "";
-            if(currentIndex === currentWord.length){
+            currentInput="";
+            if(currentIndex===currentWord.length){
                 correctWords++;
                 updateStats();
-                setTimeout(newWord, 1200);
-            } else {
+                setTimeout(newWord,1200);
+            }else{
                 updateDisplay();
             }
         }
 
-        let pressStart = 0;
-        const LONG_PRESS = 500;
+        let pressStart=0;
+        const LONG_PRESS=500;
 
-        buttonEl.addEventListener("mousedown", e=>{
-            e.preventDefault();
-            pressStart = Date.now();
-            buttonEl.classList.add("pressed");
-        });
-
-        buttonEl.addEventListener("mouseup", e=>{
+        buttonEl.addEventListener("mousedown",e=>{e.preventDefault();pressStart=Date.now();buttonEl.classList.add("pressed");});
+        buttonEl.addEventListener("mouseup",e=>{
             e.preventDefault();
             if(!buttonEl.classList.contains("pressed")) return;
-            const duration = Date.now() - pressStart;
+            const dur=Date.now()-pressStart;
             buttonEl.classList.remove("pressed");
 
-            if(duration < LONG_PRESS){
-                currentInput += ".";
-                playTone(120, 900);
-            } else {
-                currentInput += "-";
-                playTone(360, 900);
-            }
+            currentInput += dur < LONG_PRESS ? "." : "-";
+            playTone(dur < LONG_PRESS ? 120 : 360, 900);
 
             const expected = letterToMorse[currentWord[currentIndex]];
-
             if(currentInput === expected){
                 correct();
             }
-            else if(expected.startsWith(currentInput) === false && currentInput.length >= 2){
+            else if(!expected.startsWith(currentInput) && currentInput.length >= 2){
                 wrong();
             }
         });
 
-        buttonEl.addEventListener("touchstart", e=>{e.preventDefault(); buttonEl.dispatchEvent(new Event("mousedown"));});
-        buttonEl.addEventListener("touchend", e=>{e.preventDefault(); buttonEl.dispatchEvent(new Event("mouseup"));});
+        buttonEl.addEventListener("touchstart",e=>{e.preventDefault();buttonEl.dispatchEvent(new Event("mousedown"));});
+        buttonEl.addEventListener("touchend",e=>{e.preventDefault();buttonEl.dispatchEvent(new Event("mouseup"));});
 
-        // Boshlash
         newWord();
         updateStats();
-        document.body.addEventListener("click", ()=>audioCtx.resume(), {once:true});
+        document.body.addEventListener("click",()=>audioCtx.resume(),{once:true});
     </script>
 </body>
 </html>
